@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Stealing Login Credentails using HTTP Request Smuggling
+title: Stealing Login Credential using HTTP Request Smuggling
 date: 2023-08-15 07:03 +0000
 categories: [bugbounty, writeup]
 tags: [bugbounty] 
