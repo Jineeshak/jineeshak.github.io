@@ -1,13 +1,12 @@
 ---
+layout: post
 title: Stealing Login Credentails using HTTP Request Smuggling
-author: Jineesh
-date: 2023-08-15 14:10:00 +0800
-categories: [Writeup,bugbounty]
-tags: [bugbounty]
-render_with_liquid: false
+date: 2023-08-15 07:03 +0000
+categories: [bugbounty, writeup]
+tags: [bugbounty] 
 ---
 
-In this blog post, I will discuss a significant security vulnerability I discovered in a specific target. The vulnerability, called HTTP request smuggling, provided me with the ability to manipulate the application's behavior, potentially compromising user credentials. I responsibly reported this vulnerability to the application's development team, who took appropriate measures to address it. In this write-up, I will explain the nature of the vulnerability, its impact, and the steps taken for responsible disclosure.
+I recently discovered a significant security vulnerability in a target. The vulnerability, HTTP request smuggling, allowed me to manipulate the application's behavior, potentially compromising user credentials. I responsibly reported this vulnerability to the application's development team, who took appropriate measures to address it.
 
 ## Description
 
@@ -39,7 +38,7 @@ X-Ignore: X
 
 Instead of the expected response of "302," the application returned a "404" status code, indicating that the vulnerability was present.
 
-![Screenshot 2023-05-16 at 12.07.05 PM(1).jpg](images/1.jpg)
+![Screenshot](https://jaksan.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F22149b15-d733-4242-b5ad-6d1645d78a09%2FScreenshot_2023-05-16_at_12.07.05_PM(1).jpg?table=block&id=5f03f4bc-0539-4e4c-87aa-5ba0aa8d37d2&spaceId=13ac45fb-0b3e-4834-8b18-ec6f584d18fd&width=2000&userId=&cache=v2)
 
 ### Exploiting the Vulnerability
 
@@ -67,8 +66,12 @@ X-Ignore: X
 
 This manipulation changed the base URL of the login request form to a malicious domain, allowing an attacker to intercept user credentials.
 
-![Screenshot 2023-05-22 at 9.27.15 PM.png](images/2.png)
+![Screenshot 2 ](https://jaksan.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fe67ab3da-1b94-4a50-a083-2bf026eb2be6%2FScreenshot_2023-05-22_at_9.27.15_PM.png?table=block&id=2c1eb8d5-52a8-4f58-9619-e4114745142c&spaceId=13ac45fb-0b3e-4834-8b18-ec6f584d18fd&width=2000&userId=&cache=v2)
 
 ### Potential Impact
 
 The impact of this vulnerability is severe. When a legitimate user logs in to the affected application, their credentials are unknowingly sent to the malicious domain controlled by the attacker. This could lead to unauthorized access, account takeover, or further compromise of sensitive data.
+
+### Reference
+
+[PortSwigger](https://portswigger.net/web-security/request-smuggling)
