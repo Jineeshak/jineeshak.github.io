@@ -1,6 +1,11 @@
-# Stealing Login Credentails using HTTP Request Smuggling
-
-### Introduction
+---
+title: Stealing Login Credentails using HTTP Request Smuggling
+author: Jineesh
+date: 2023-08-15 14:10:00 +0800
+categories: [Writeup,bugbounty]
+tags: [bugbounty]
+render_with_liquid: false
+---
 
 In this blog post, I will discuss a significant security vulnerability I discovered in a specific target. The vulnerability, called HTTP request smuggling, provided me with the ability to manipulate the application's behavior, potentially compromising user credentials. I responsibly reported this vulnerability to the application's development team, who took appropriate measures to address it. In this write-up, I will explain the nature of the vulnerability, its impact, and the steps taken for responsible disclosure.
 
