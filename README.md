@@ -1,0 +1,1 @@
+Collection of my bug bounty writeups
