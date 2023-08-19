@@ -6,7 +6,6 @@ categories: [bugbounty, writeup]
 tags: [bugbounty,rce] 
 ---
 
-# Remote Code Execution using Dependency Confusion
 
 ## Introduction
 
