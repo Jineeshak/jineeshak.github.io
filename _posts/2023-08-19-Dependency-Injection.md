@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Remote Code Execution through Dependency injection using Burpsuite Extension
+title: Remote Code Execution through Dependency Confusion using Burpsuite Extension
 date: 2023-08-19 15:08 +0530
 categories: [bugbounty, writeup]
 tags: [bugbounty,rce] 
@@ -9,7 +9,7 @@ tags: [bugbounty,rce]
 
 ## Introduction
 
-Dependency Confusion is a security vulnerability that affects software dependencies in the software development process. It occurs when a public package manager installs an internal or private package with the same name as an external public package. An attacker can exploit this vulnerability by uploading a malicious package to the public package repository.
+[Dependency Confusion](https://fossa.com/blog/dependency-confusion-understanding-preventing-attacks/) is a security vulnerability that affects software dependencies in the software development process. It occurs when a public package manager installs an internal or private package with the same name as an external public package. An attacker can exploit this vulnerability by uploading a malicious package to the public package repository.
 
 ## Discovery
 
