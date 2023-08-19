@@ -2,6 +2,8 @@
 layout: post
 title: Remote Code Execution through Dependency injection using Burpsuite Extension
 date: 2023-08-19 15:08 +0530
+categories: [bugbounty, writeup]
+tags: [bugbounty,rce] 
 ---
 
 # Remote Code Execution using Dependency Confusion
@@ -13,9 +15,12 @@ Dependency Confusion is a security vulnerability that affects software dependenc
 ## Discovery
 
 I was testing a bug bounty target when I noticed that the extension [JS-Miner](https://portswigger.net/bappstore/0ab7a94d8e11449daaf0fb387431225b) flagged a dependency issue in the target application. The issue involved a JavaScript file that referenced an organization called **private-progrm-widget/widget1**. However, this organization was not found in the NPM registry. An attacker can create a fake package that is named `private-progrm-widget` and then create a module name `widget1` and upload that to the NPM registry. When the target application tries to install this package, it will actually install the attacker's malicious code.
-![JS-miner](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/JS1.png?raw=true)
+![JS-miner](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/JS4.png?raw=true)
 
 For the proof of concept, I created the following `index.js` and `package.json` files and published them to [npmjs.com](http://npmjs.com/) under the name **private-progrm-widget/widget module** :
+
+
+#### index.js
 
 ```jsx
 const os = require("os");
@@ -66,6 +71,8 @@ req.write(postData);
 req.end();
 
 ```
+
+#### package.json
 
 ```json
 {
