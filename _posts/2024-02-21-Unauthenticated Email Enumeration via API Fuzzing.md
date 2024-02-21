@@ -60,7 +60,10 @@ HTTP Response: "Anonymous user (not logged in) not authorized for operation: [co
 
 
 ```
-And based on this error messages, I(ChatGPT) made a wacky Python script to automate the email enumeration:
+
+## Exploit
+
+And based on above error messages, I( ChatGPT of course! ) made a wacky Python script to automate the email enumeration:
 
 ```python
 import requests
