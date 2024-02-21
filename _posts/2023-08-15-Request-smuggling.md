@@ -3,7 +3,7 @@ layout: post
 title: Stealing Login Credentials using HTTP Request Smuggling
 date: 2023-08-15 07:03 +0000
 categories: [bugbounty, writeup]
-tags: [bugbounty] 
+tags: [bugbounty.Smuggling] 
 ---
 
 I recently discovered a significant security vulnerability in a target. The vulnerability, HTTP request smuggling, allowed me to manipulate the application's behavior, potentially compromising user credentials. I responsibly reported this vulnerability to the application's development team, who took appropriate measures to address it.
