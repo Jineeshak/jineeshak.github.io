@@ -9,12 +9,12 @@ tags: [bugbounty,API,FUZZ]
 
 ## Introduction
 
-This post investigates a security vulnerability within the "signup" function of the GraphQL API, as observed in the application under examination. This vulnerability allows unauthorized users to enumerate email addresses without authentication or rate limiting, potentially exposing sensitive information.
+This blog post explores a recent finding I discovered in a bug bounty target. I stumbled upon a user enumeration issue that exposes email addresses without proper security measures. This vulnerability allows unauthorized users to enumerate all email addresses without authentication or rate limiting, potentially exposing sensitive information.
 
 ## Discovery
 
 While testing the registration process, I encountered a POST request to a API endpoint used for email verification in my burp history tab. The endpoint was checking if the email address I entered during registration already existed or not.So i started 
-Fuzzing the endpoint `/registration` with fuzzing payloads using intruder, I stumbled upon a peculiar response when I injected a % character into the `userEmail` parameter. The server returned a 500 Internal Server Error along with a  message
+Fuzzing the endpoint `/registration` with fuzzing payloads using intruder, I stumbled upon a 500 error code response when I injected a `%` character into the `userEmail` json parameter. The server returned a 500 Internal Server Error along with a  message
 
 ##### Request
 
@@ -33,7 +33,7 @@ Content-Type: application/json;charset=UTF-8
 There was an unexpected error (type=Internal Server Error, status=500).</div><div>Unable to find com.correnet.matcha.client.model.application.AccessGroup with id 7052; nested exception is javax.persistence.EntityNotFoundException: Unable to find com.correnet.matcha.client.model.application.AccessGroup with id 7052
 
 ```
-By observing this error message my assumption was the post request  sent to the registration endpoint with the `userEmail` parameter set to `%`. This input triggers a SQL query in the backend to select all records from the users table where the email column matches any value containing the % character. The error message returned from the server indicates that there are 7052 entries in the system, giving insight into the number of user accounts present.Something like,
+By observing this error message my assumption was the post request  sent to the registration endpoint with the `userEmail` parameter set to `%`. This input triggers a SQL query in the backend to select all records from the users table where the email column matches any value containing the `% ` character. The error message returned from the server indicates that there are 7052 entries in the system, giving insight into the number of user accounts present.Something like,
 
 ```sql
 SELECT * FROM users WHERE email LIKE "%"
@@ -51,7 +51,13 @@ HTTP Response: "Could not find resource: ApplicationUser identified by adamcorta
 ```
 
 HTTP Request: {"userEmail":"adamcorte%"}
+
+HTTP Response: "There was an unexpected error (type=Internal Server Error, status=500).</div><div>Unable to find com.correnet.matcha.client.model.application.AccessGroup with id"
+
+or
+
 HTTP Response: "Anonymous user (not logged in) not authorized for operation: [connect application user to Platform user]"
+
 
 ```
 And based on this error messages, I(ChatGPT) made a wacky Python script to automate the email enumeration:
