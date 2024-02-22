@@ -33,7 +33,7 @@ Content-Type: application/json;charset=UTF-8
 There was an unexpected error (type=Internal Server Error, status=500).</div><div>Unable to find com.correnet.matcha.client.model.application.AccessGroup with id 7052; nested exception is javax.persistence.EntityNotFoundException: Unable to find com.correnet.matcha.client.model.application.AccessGroup with id 7052.
 
 ```
-By observing this error message, my assumption was that the input I passed is executed in a SQL query in the backend. This query likely performs a select statement on all records from the users table where the email column matches any value containing the % character. It's worth noting that `%` is a wildcard character in SQL, indicating any sequence of characters, so logically, it would return all matching entries. The error message returned from the server indicates that there are 7052 entries in the system, providing insight into the number of user accounts present.Based on this assumption, the SQL query executed in the backend might resemble the following, where the % character serves as a wildcard to match any sequence of characters in the email column,
+By observing this error message, my assumption was that the input I passed is executed in a SQL query in the backend. This query likely performs a select statement on all records from the users table where the email column matches any value containing the `%` character. It's worth noting that `%` is a wildcard character in SQL, indicating any sequence of characters, so logically, it would return all matching entries. The error message returned from the server indicates that there are 7052 entries in the system, providing insight into the number of user accounts present.Based on this assumption, the SQL query executed in the backend might resemble the following, where the % character serves as a wildcard to match any sequence of characters in the email column,
 
 ```sql
 SELECT * FROM users WHERE email LIKE "{userEmail}"
@@ -140,6 +140,7 @@ def send_request(payload):
 result = brute_force_attack()
 print("The correct username is:", result)
 ```
+
 ![Sample Proof of Concept (PoC)](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/3.png?raw=true "Username enumeration")
 
 In response to this discovery, the program triaged and fixed the vulnerability by implementing input validation and captcha protection to the registration page.
