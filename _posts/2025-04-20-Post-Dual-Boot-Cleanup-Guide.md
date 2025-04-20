@@ -3,7 +3,7 @@ layout: post
 title: Post-Dual Boot Cleanup – Reclaiming Lost Partition Space After Removing Ubuntu
 date: 2025-04-20 21:00 +0530
 categories: [system, fix]
-tags: [dual-boot, gparted, partition, unallocated-space, disk-management, partition-recovery, ubuntu-removal, recover-space, efi-boot, system-partition, live-usb, kali-linux, ubuntu-live, diskpart-error]
+tags: [dual-boot, gparted, unallocated-space, disk-management, partition-recovery, ubuntu-removal, recover-space, efi-boot, system-partition, live-usb, kali-linux, ubuntu-live, diskpart-error]
 ---
 
 # Post-Dual Boot Cleanup – Reclaiming Lost Partition Space After Removing Ubuntu
