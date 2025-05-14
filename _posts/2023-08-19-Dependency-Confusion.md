@@ -17,7 +17,7 @@ I was testing a bug bounty target when I noticed that the extension [JS-Miner](h
 
 ![JS-miner](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/JS4.png?raw=true)
 
-For the proof of concept, I created the following `index.js` and `package.json` files and published them to [npmjs.com](http://npmjs.com/) under the name **private-progrm-widget/widget module** :
+For the proof of concept, I created the following `index.js` and `package.json` files and published them to [npmjs.com](https://npmjs.com/) under the name **private-progrm-widget/widget module** :
 
 
 #### index.js
@@ -94,7 +94,7 @@ req.end();
 
 ```
 
-When a user installs this module, it retrieves their username and current working directory. After waiting for a while, the following HTTP calls were logged to my [interact.sh](http://interact.sh/) server, confirming the execution of the `index.js` file.
+When a user installs this module, it retrieves their username and current working directory. After waiting for a while, the following HTTP calls were logged to my [interact.sh](https://interact.sh/) server, confirming the execution of the `index.js` file.
 
 ![Remote%20Code%20Execution%20using%20Dependency%20Confusion%20bbc9d0cfc912465883f0d0f3d55ffa68/Screenshot_2023-05-23_at_5.20.20_PM.png](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/JS2.png?raw=true)
 
