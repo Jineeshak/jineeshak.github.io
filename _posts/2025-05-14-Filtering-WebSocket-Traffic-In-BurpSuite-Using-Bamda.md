@@ -9,7 +9,7 @@ tags: [websocket, burpsuite, bamda, pentest, message-filtering, burp-extensions,
 
 ## Introduction
 
-One of the issues a tester faces when testing a WebSocket-heavy application is that there aren't many filtering options available for WebSocket traffic — unlike HTTP messages in Burp Suite. 
+One of the issues I faced while testing a WebSocket-heavy application is that there aren't many filtering options available for WebSocket traffic — unlike HTTP messages in Burp Suite. 
 
 With HTTP traffic, you can easily scope URLs, hide irrelevant hosts, or apply fine-grained filters. But with WebSockets, **the entire flow becomes noisy**: constant `ping`/`pong` messages, huge volumes of client-server chatter, and **no easy way to hide out-of-scope traffic**.
 
@@ -52,24 +52,7 @@ return message.payload().length() > 60 &&
        message.payload().toString().matches(".*https?://.*");
 ```
 
-### 3. Exclude out-of-scope domains manually  
-Since there's no `isInScope()` for WebSocket messages, you can manually exclude domains:
-
-```java
-return !message.payload().toString().contains("outofscope.com");
-```
-
-Add more exclusions as needed.
-
-### 4. Filter for JSON-looking content
-
-```java
-return message.payload().toString().trim().startsWith("{");
-```
-
-This helps you focus on structured data — especially useful for GraphQL or REST over WebSocket.
-
-### 5. Show only server responses
+### 3. Show only server responses
 
 ```java
 return message.direction() == Direction.SERVER_TO_CLIENT;
