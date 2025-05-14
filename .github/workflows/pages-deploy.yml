@@ -50,6 +50,7 @@ jobs:
         run: bundle exec jekyll build -d "_site${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
+          BUNDLE_PATH: ${{ github.workspace }}/vendor/bundle # Explicitly set BUNDLE_PATH
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
