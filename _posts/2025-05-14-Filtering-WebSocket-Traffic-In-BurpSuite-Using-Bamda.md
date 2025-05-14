@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Taming WebSocket Noise in Burp Suite – Practical Filtering with Bambda
+title: Filtering WebSocket Noise in BurpSuite Using Bambda
 date: 2025-05-14 22:00 +0530
 categories: [burp, websocket]
 tags: [websocket, burpsuite, bamda, pentest, message-filtering, burp-extensions, montoya, bugbounty]
@@ -26,7 +26,7 @@ When dealing with WebSocket traffic, you often face:
 - Limited UI-level filtering options
 
 ![Burp Suite WebSocket Filtering Options](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/Burp_websocket.png?raw=true)
-*Caption: Burp Suite WebSocket filtering options for managing WebSocket traffic*
+* Burp Suite WebSocket filtering options for managing WebSocket traffic*
 
 
 As a result, **analyzing meaningful WebSocket messages gets painful**, especially in large apps or single-page applications with real-time data sync.
