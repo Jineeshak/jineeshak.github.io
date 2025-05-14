@@ -6,7 +6,6 @@ categories: [burp, websocket]
 tags: [websocket, burpsuite, bamda, pentest, message-filtering, burp-extensions, montoya, bugbounty]
 ---
 
-# Taming WebSocket Noise in Burp Suite – Practical Filtering with Bambda
 
 ## Introduction
 
