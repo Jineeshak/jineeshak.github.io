@@ -1,8 +1,5 @@
 name: "Build and Deploy"
-
 on:
-  schedule:
-    - cron: "0 0 * * *"
   push:
     branches:
       - main
@@ -11,6 +8,8 @@ on:
       - .gitignore
       - README.md
       - LICENSE
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 permissions:
@@ -18,6 +17,7 @@ permissions:
   pages: write
   id-token: write
 
+# Allow one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -31,7 +31,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # submodules: true  # Uncomment if using git submodules
+          # submodules: true
+          # If using the 'assets' git submodule from Chirpy Starter, uncomment above
+          # (See: https://github.com/cotes2020/chirpy-starter/tree/main/assets)
 
       - name: Setup Pages
         id: pages
@@ -43,14 +45,26 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true
 
-      - name: Install Dependencies
-        run: bundle install
+      # Optional: Clear Bundler cache to avoid issues with outdated gems
+      - name: Clear Bundler cache
+        run: |
+          rm -rf ~/.bundle
 
-      - name: Build site with Jekyll
-        run: bundle exec jekyll build -d "_site${{ steps.pages.outputs.base_path }}"
+      - name: Install Dependencies
+        run: |
+          gem install jekyll-theme-chirpy -v 7.2.4
+          bundle install
+
+      - name: Build site
+        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
         env:
-          JEKYLL_ENV: production
-          BUNDLE_PATH: ${{ github.workspace }}/vendor/bundle # Explicitly set BUNDLE_PATH
+          JEKYLL_ENV: "production"
+
+      - name: Test site
+        run: |
+          bundle exec htmlproofer _site \
+            --disable-external \
+            --ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
