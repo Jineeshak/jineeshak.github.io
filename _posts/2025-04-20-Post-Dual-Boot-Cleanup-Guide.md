@@ -1,93 +1,89 @@
 ---
 layout: post
-title: Taming WebSocket Noise in Burp Suite – Practical Filtering with Bambda
-date: 2025-05-14 22:00 +0530
-categories: [burp, websocket]
-tags: [websocket, burpsuite, bamda, pentest, message-filtering, burp-extensions, montoya, bugbounty]
+title: Post-Dual Boot Cleanup – Reclaiming Lost Partition Space After Removing Ubuntu
+date: 2025-04-20 21:00 +0530
+categories: [system, fix]
+tags: [dual-boot, gparted, unallocated-space, disk-management, partition-recovery, ubuntu-removal, recover-space, efi-boot, system-partition, live-usb, kali-linux, ubuntu-live, diskpart-error]
 ---
 
-# Taming WebSocket Noise in Burp Suite – Practical Filtering with Bambda
+# Post-Dual Boot Cleanup – Reclaiming Lost Partition Space After Removing Ubuntu
 
 ## Introduction
 
-One of the issues a tester faces when testing a WebSocket-heavy application is that there aren't many filtering options available for WebSocket traffic — unlike HTTP messages in Burp Suite. 
+This isn't my usual post about **vulnerabilities**, **bug bounty**, or **web security**. This time, it's something different — a persistent issue I hit after removing Ubuntu from a dual-boot setup. It messed up my partitions, left behind EFI boot entries, and blocked nearly **100 GB of usable space**.
 
-With HTTP traffic, you can easily scope URLs, hide irrelevant hosts, or apply fine-grained filters. But with WebSockets, **the entire flow becomes noisy**: constant `ping`/`pong` messages, huge volumes of client-server chatter, and **no easy way to hide out-of-scope traffic**.
-
-That's where **Bambda**, a not-so-new feature in Burp Suite, comes in. It allows you to filter WebSocket messages based on content, direction, and even size — helping you **tidy up the signal from the noise**.
+After trying several tools and commands (many of which failed), I finally resolved it — so here's a write-up for anyone facing the same frustrating post-dual-boot cleanup.
 
 ## The Problem
 
-When dealing with WebSocket traffic, you often face:
+After removing Ubuntu:
+- I still saw **Ubuntu** entries in my UEFI boot menu
+- **Disk Management** in Windows showed a **1.07 GB System partition**, 98 GB of **unallocated space**, and wouldn't let me extend the main partition
+- `diskpart` couldn't delete the partition: `Virtual Disk Service error: The operation is not supported by the object.`
+- Tools like **MiniTool Partition Wizard** didn't help
+- **WSL** showed disk usage but wasn't able to manipulate partitions
 
-- A stream of `ping`/`pong` messages
-- Messages from out-of-scope domains you don't care about
-- Large payloads mixed with short heartbeats
-- Limited UI-level filtering options
+## The Solution: Using a Live Linux Environment
 
-As a result, **analyzing meaningful WebSocket messages gets painful**, especially in large apps or single-page applications with real-time data sync.
+Since Windows tools couldn't fix the partition issues, I needed to approach the problem from outside Windows. **A Linux live boot environment** provides the perfect tools for this job, particularly GParted, which has more powerful partition management capabilities than Windows Disk Management.
 
-## Filtering with Bambda
+For this guide, I used **Kali Linux** as my live USB distro (because I keep it around for security testing), but this solution will work equally well with **Ubuntu Live**, **GParted Live**, or any Linux ISO that includes GParted.
 
-Bambda is Burp Suite’s custom filtering language — think of it like Java snippets used to process and filter WebSocket messages.
+## Step-by-Step Fix
 
-You can write expressions in the **WebSocket history filter bar** using `message ->` syntax. Here are some real-world examples we’ve tested:
+### 1. Disable Secure Boot
 
-### 1. Remove `ping`/`pong` messages
+Booting into Kali or any unsigned Linux ISO often fails with a "Security Violation" error. To fix that:
+- Enter BIOS (usually `F2`, `DEL`, or `ESC` on boot)
+- Disable **Secure Boot**
+- Save and exit
 
-```java
-return !message.payload().toString().contains("ping") && 
-       !message.payload().toString().contains("pong");
-```
-This removes most of the heartbeat traffic that clutters your view.
+### 2. Create Live USB (I Used Kali)
 
-### 2. Show only client-to-server messages longer than 60 bytes and likely to contain URLs (e.g., for SSRF hunting)
+- I used **Rufus** with the following options:
+  - **Partition scheme**: GPT
+  - **Target system**: UEFI (non-CSM)
+  - **File system**: FAT32
+- You can use Ubuntu, GParted Live, etc., but I used Kali just in case I needed other tools
 
-```java
-return message.payload().length() > 60 &&
-       message.direction() == Direction.CLIENT_TO_SERVER &&
-       message.payload().toString().matches(".*https?://.*");
-```
+### 3. Boot Kali and Open GParted
 
-### 3. Exclude out-of-scope domains manually  
-Since there's no `isInScope()` for WebSocket messages, you can manually exclude domains:
+Once Kali booted:
+- Open **GParted**
+- I noticed:
+  - A ~1.x GB "System" partition
+  - ~98.x GB of **unallocated space** that couldn't be used because the system partition was in the way
 
-```java
-return !message.payload().toString().contains("outofscope.com");
-```
+> Windows couldn't remove that system partition, but GParted could.
 
-Add more exclusions as needed.
+### 4. Delete the System Partition
 
-### 4. Filter for JSON-looking content
+- Right-clicked the 1.x GB "System" partition
+- Selected **Delete**
+- Now I had one large ~100 GB chunk of unallocated space
 
-```java
-return message.payload().toString().trim().startsWith("{");
-```
+### 5. Resize the Existing Partition
 
-This helps you focus on structured data — especially useful for GraphQL or REST over WebSocket.
+- Right-clicked the main (E:) partition
+- Selected **Resize/Move**
+- Dragged to use **all the available unallocated space**
+- Set **Align to** → `MiB` (recommended)
+- Applied changes using the **green checkmark**
 
-### 5. Show only server responses
+### 6. Merge in Windows (Disk Management)
 
-```java
-return message.direction() == Direction.SERVER_TO_CLIENT;
-```
-
-Useful when you just want to track what the server is pushing.
-
-## Limitations
-- Bambda filtering is powerful but comes with a *performance cost* — complex filters can lag the UI.
-- Some familiarity with coding is required to write and customize Bambda filters effectively.
+- Rebooted into Windows
+- Opened **Disk Management** (`diskmgmt.msc`)
+- The previously unallocated 100 GB was now directly next to my E: drive
+- Right-clicked the partition → **Extend Volume...**
+- Merged the space successfully — no tools needed
 
 ## Conclusion
-If you're dealing with modern web apps that rely heavily on WebSockets, cleaning up the traffic becomes a necessity. Burp Suite doesn't offer the same level of filtering for WebSocket traffic as it does for HTTP, but Bambda gives you a way to take control.
 
-By using Bambda filters, you can:
+Post-dual boot cleanup can get tricky when partitions are locked, out of order, or marked as system-reserved — especially when Windows tools refuse to cooperate. The key takeaway here is: **sometimes the only way to reclaim your space is from outside Windows**.
 
-- Cut out the noise (like ping/pong)
-- Focus on request/response directions
-- Detect payloads with specific characteristics (like URLs or JSON)
-- Create a manageable WebSocket testing workflow
+While I personally used **Kali Linux** as my live USB (mostly because I keep it around for security testing), you don't have to. This method works just as well with **Ubuntu Live**, **GParted Live**, or any Linux distro that includes GParted.
 
-This doesn’t solve everything — but it gets you closer to clarity in a stream of chaos.
+In the end, combining GParted for surgical cleanup and Windows Disk Management for finishing touches gave me a clean, single-boot setup with all my space back — no formatting, no reinstalls, no stress.
 
-For more information on Montoya API and examples, check out [here](https://github.com/PortSwigger/burp-extensions-montoya-api-examples) and the official [Montoya API documentation](https://portswigger.github.io/burp-extensions-montoya-api/javadoc/burp/api/montoya/MontoyaApi.html).
+Got a similar mess? Boot live, take control, and reclaim your space.
