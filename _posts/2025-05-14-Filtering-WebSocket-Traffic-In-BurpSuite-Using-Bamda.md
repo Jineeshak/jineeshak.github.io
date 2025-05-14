@@ -25,7 +25,7 @@ When dealing with WebSocket traffic, you often face:
 - Limited UI-level filtering options
 
 ![Burp Suite WebSocket Filtering Options](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/Burp_websocket.png?raw=true)
-**Burp Suite WebSocket filtering options for managing WebSocket traffic**
+Burp Suite WebSocket filtering options for managing WebSocket traffic
 
 
 As a result, **analyzing meaningful WebSocket messages gets painful**, especially in large apps or single-page applications with real-time data sync.
