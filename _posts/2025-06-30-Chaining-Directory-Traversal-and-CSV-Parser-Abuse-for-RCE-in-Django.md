@@ -16,10 +16,10 @@ The vulnerable endpoint allowed users to upload CSV files, process them using `p
 ```python
 
         username = request.data.get("username")
-        fleet_file = request.FILES.get("csv_file")
-        temp_path = f"/tmp/{fleet_file.name}"
+        upload_file = request.FILES.get("csv_file")
+        temp_path = f"/tmp/{upload_file.name}"
         with open(temp_path, "wb") as out_file:
-            for chunk in fleet_file.chunks():
+            for chunk in upload_file.chunks():
                 out_file.write(chunk)
 
         # Parse uploaded CSV
@@ -30,7 +30,7 @@ The vulnerable endpoint allowed users to upload CSV files, process them using `p
         save_dir = os.path.join(base_dir, "data_store", username)
         os.makedirs(save_dir, exist_ok=True)
 
-        final_path = os.path.join(save_dir, fleet_file.name)
+        final_path = os.path.join(save_dir, upload_file.name)
         if os.path.exists(final_path):
             os.remove(final_path)
         df.to_csv(final_path, index=False, encoding="utf-8")
