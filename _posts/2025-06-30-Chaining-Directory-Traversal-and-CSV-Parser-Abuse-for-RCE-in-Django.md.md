@@ -94,7 +94,7 @@ After going through pandas’ processing, it still looked like a comment line to
 
 At this stage, the file overwrite was working — but to escalate it to RCE, I needed to identify a file that the application would **automatically load or execute after modification**, since I had **no direct ability to invoke the overwritten file manually**. This meant finding a server-side script that Django would re-import or re-run implicitly on access. That led me to `wsgi.py`.
 
-## Why `wsgi.py`?
+## Why wsgi.py?
 
 From the [WSGI specification](https://wsgi.readthedocs.io/en/latest/), the `wsgi.py` file exists to expose a callable named `application` that acts as the entry point for the web server to interact with a Python app. In Django, this is typically done using:
 
