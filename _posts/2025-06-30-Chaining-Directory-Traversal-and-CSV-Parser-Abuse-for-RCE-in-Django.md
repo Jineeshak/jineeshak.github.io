@@ -1,7 +1,7 @@
 ---
 
 title: "How I Chained Directory Traversal and CSV Parser Abuse for RCE in a Django App"
-date: 2025-06-16
+date: 2025-06-30
 categories: [security, django, rce]
 tags: [bugbounty, csv, traversal, django, rce]
 
