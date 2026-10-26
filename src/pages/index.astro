@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import Icon from '../components/Icon.astro';
+import { getCollection } from 'astro:content';
+import { SITE, SOCIAL } from '../consts';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const recent = SITE.postsPerHome > 0 ? allPosts.slice(0, SITE.postsPerHome) : allPosts;
+---
+<Base>
+  <section class="hero">
+    <p class="eyebrow">whoami</p>
+    <h1>{SITE.author}</h1>
+    <p class="tagline">{SITE.tagline}</p>
+    <p class="desc">{SITE.description}</p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/posts/">Read the writeups</a>
+      <a class="btn" href="/about/">About me</a>
+      {SOCIAL.map((s) => (
+        <a class="btn icon-btn" href={s.href} aria-label={s.name}>
+          <Icon name={s.icon as any} size={16} />
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section-title">
+    <h2><span class="prompt">&gt;</span>Latest writeups</h2>
+    <a class="more" href="/posts/">view all &rarr;</a>
+  </section>
+  <div class="grid">
+    {recent.map((post) => <PostCard post={post} />)}
+  </div>
+</Base>
+
+<style>
+  .hero { padding-block: 2.5rem 3.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.2em; }
+  .tagline { font-family: var(--font-mono); color: var(--accent-2); font-size: 1.05rem; margin: 0 0 0.8em; }
+  .desc { color: var(--muted); max-width: 60ch; margin-bottom: 1.6em; }
+  .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }
+  .icon-btn { padding: 0.6em 0.8em; }
+</style>

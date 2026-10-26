@@ -1,0 +1,53 @@
+---
+import Base from './Base.astro';
+import Icon from '../components/Icon.astro';
+import '../styles/prose.css';
+
+interface Props {
+  post: {
+    data: {
+      title: string;
+      description: string;
+      date: Date;
+      updated?: Date;
+      categories: string[];
+      tags: string[];
+    };
+  };
+}
+const { post } = Astro.props;
+const dateStr = post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<Base title={post.data.title} description={post.data.description}>
+  <article class="post">
+    <div class="page-head">
+      <div class="meta mono">
+        <span><Icon name="calendar" size={14} /> {dateStr}</span>
+        {post.data.categories.map((c) => (
+          <a class="pill" href={`/categories/${c}/`}><Icon name="folder" size={12} /> {c}</a>
+        ))}
+      </div>
+      <h1>{post.data.title}</h1>
+      {post.data.description && <p class="desc">{post.data.description}</p>}
+    </div>
+    <div class="prose">
+      <slot />
+    </div>
+    {post.data.tags.length > 0 && (
+      <div class="tags">
+        {post.data.tags.map((t) => (
+          <a class="pill" href={`/tags/${t}/`}><Icon name="tag" size={12} /> {t}</a>
+        ))}
+      </div>
+    )}
+    <p class="back"><a href="/posts/">&larr; All posts</a></p>
+  </article>
+</Base>
+
+<style>
+  .meta { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
+  .meta > span { display: inline-flex; align-items: center; gap: 0.4em; color: var(--muted); font-size: 0.8rem; }
+  .desc { font-size: 1.05rem; color: var(--muted); max-width: 70ch; }
+  .tags { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .back { margin-top: 2rem; font-family: var(--font-mono); font-size: 0.9rem; }
+</style>

@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+const counts = new Map<string, number>();
+for (const p of posts) for (const t of p.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+const tags = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+---
+<Base title="Tags" description="Browse posts by tag.">
+  <div class="page-head">
+    <p class="eyebrow">index</p>
+    <h1>Tags</h1>
+  </div>
+  <div class="pills">
+    {tags.map(([name, count]) => (
+      <a class="pill" href={`/tags/${name}/`}>
+        <Icon name="tag" size={14} /> {name} <span class="count">{count}</span>
+      </a>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .pills { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+  .pill { font-size: 0.95rem; padding: 0.4em 0.9em; }
+</style>
