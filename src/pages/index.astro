@@ -22,11 +22,8 @@ const termLines = [
     <div class="hero-grid">
       <div class="hero-copy">
         <p class="eyebrow">whoami</p>
-        <h1>
-          <span class="glow-line">
-            <span class="cyber-text">{SITE.author}</span>
-          </span>
-        </h1>
+        <h1><span class="cyber-text">{SITE.author}</span></h1>
+        <div class="glow-divider"></div>
         <p class="tagline">{SITE.tagline}</p>
         <p class="desc">{SITE.description}</p>
         <div class="actions">
@@ -70,17 +67,13 @@ const termLines = [
   .hero { padding-block: 2.5rem 3.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
   .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; }
 
-  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0.6em 0 0.2em; }
-  .glow-line { position: relative; display: inline-block; padding-top: 0.9em; }
-  .glow-line::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
+  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0.5em 0 0; }
+  .glow-divider {
     height: 3px;
-    background: linear-gradient(90deg, var(--accent), transparent 70%);
+    margin: 0.7em 0 0.9em;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2) 60%, transparent 95%);
     box-shadow: 0 0 12px 2px var(--accent);
+    border-radius: 2px;
   }
   .cyber-text {
     position: relative;
@@ -120,7 +113,7 @@ const termLines = [
     100% { transform: scaleX(0); }
   }
 
-  .tagline { font-family: var(--font-mono); color: var(--accent-2); font-size: 1.05rem; margin: 0.4em 0 0.8em; }
+  .tagline { font-family: var(--font-mono); color: var(--accent-2); font-size: 1.05rem; margin: 0 0 0.8em; }
   .desc { color: var(--muted); max-width: 60ch; margin-bottom: 1.6em; }
   .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }
   .icon-btn { padding: 0.6em 0.8em; }
