@@ -1,0 +1,26 @@
+---
+import { SITE, SOCIAL } from '../consts';
+import Icon from './Icon.astro';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container bar">
+    <p class="mono">&copy; {year} {SITE.author}. Built with Astro.</p>
+    <div class="social">
+      {SOCIAL.map((s) => (
+        <a href={s.href} aria-label={s.name} target={s.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">
+          <Icon name={s.icon as any} size={18} />
+        </a>
+      ))}
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--border); padding-block: 1.6rem; }
+  .bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+  .social { display: flex; gap: 1rem; }
+  .social a { color: var(--muted); display: inline-flex; }
+  .social a:hover { color: var(--accent); }
+</style>

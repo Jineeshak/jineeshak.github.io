@@ -1,0 +1,61 @@
+---
+import { SITE, NAV } from '../consts';
+import Icon from './Icon.astro';
+const path = new URL(Astro.request.url).pathname;
+---
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href="/">
+      <span class="brand-dot"></span>
+      <span class="mono">{SITE.author}</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      {NAV.map((item) => (
+        <a href={item.href} class={path === item.href || (item.href !== '/' && path.startsWith(item.href)) ? 'active' : ''}>
+          {item.title}
+        </a>
+      ))}
+    </nav>
+    <button class="menu-btn" id="menu-btn" aria-label="Toggle menu" aria-expanded="false">
+      <Icon name="menu" />
+    </button>
+  </div>
+  <nav class="nav-mobile" id="nav-mobile" aria-label="Primary mobile">
+    {NAV.map((item) => <a href={item.href}>{item.title}</a>)}
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(11, 10, 13, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; padding-block: 0.9rem; }
+  .brand { display: flex; align-items: center; gap: 0.5em; font-weight: 700; color: var(--text-strong); font-size: 1.05rem; }
+  .brand:hover { color: var(--text-strong); }
+  .brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  .nav { display: flex; gap: 1.6rem; font-family: var(--font-mono); font-size: 0.88rem; }
+  .nav a { color: var(--muted); }
+  .nav a:hover, .nav a.active { color: var(--accent); }
+  .menu-btn { display: none; background: none; border: none; color: var(--text); cursor: pointer; padding: 0.3em; }
+  .nav-mobile { display: none; flex-direction: column; padding: 0.5rem clamp(16px, 4vw, 32px) 1rem; border-top: 1px solid var(--border); font-family: var(--font-mono); }
+  .nav-mobile a { color: var(--muted); padding: 0.6em 0; }
+  .nav-mobile.open { display: flex; }
+  @media (max-width: 640px) {
+    .nav { display: none; }
+    .menu-btn { display: inline-flex; }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const nav = document.getElementById('nav-mobile');
+  btn?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+</script>

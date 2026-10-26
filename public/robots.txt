@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jineeshak.github.io/sitemap-index.xml

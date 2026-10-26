@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, SOCIAL } from '../consts';
+---
+<Base title="About" description="About Jineesh AK.">
+  <div class="page-head">
+    <p class="eyebrow">about</p>
+    <h1>{SITE.author}</h1>
+    <p>{SITE.tagline}</p>
+  </div>
+  <div class="about-body prose">
+    <img src={SITE.avatar} alt={SITE.author} class="avatar" />
+    <p>
+      I'm a security engineer who spends spare time hunting bugs in bug bounty programs and
+      playing CTFs. This blog is where I write up interesting vulnerabilities, exploit chains and
+      CTF challenges I've worked through — things like request smuggling, dependency confusion,
+      blind XSS, and chaining low-severity bugs into something much worse.
+    </p>
+    <p>
+      If something here is wrong, out of date, or you just want to talk security, reach out on
+      the links below.
+    </p>
+    <div class="links">
+      {SOCIAL.map((s) => (
+        <a class="btn" href={s.href}>
+          <Icon name={s.icon as any} size={16} /> {s.name}
+        </a>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .avatar { width: 96px; height: 96px; border-radius: 50%; border: 2px solid var(--border-strong); object-fit: cover; margin-bottom: 1.5rem; }
+  .links { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 1.5rem; }
+</style>
