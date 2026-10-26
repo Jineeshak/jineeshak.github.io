@@ -14,7 +14,7 @@ const termLines = [
   { cmd: 'subfinder -d target.com -silent', delay: '0.1s' },
   { cmd: 'httpx -silent -title -status-code', delay: '0.3s' },
   { cmd: 'nuclei -l targets.txt -severity high,critical', delay: '0.5s' },
-  { cmd: 'burpsuite --project-file=recon.burp', delay: '0.7s' },
+  { cmd: 'ffuf -u https://target.com/FUZZ -w wordlist.txt -mc 200,301,403', delay: '0.7s' },
 ];
 ---
 <Base>
