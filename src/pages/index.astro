@@ -70,14 +70,14 @@ const termLines = [
   .hero { padding-block: 2.5rem 3.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
   .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; }
 
-  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.2em; }
-  .glow-line { position: relative; display: inline-block; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0.6em 0 0.2em; }
+  .glow-line { position: relative; display: inline-block; padding-top: 0.9em; }
   .glow-line::before {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    top: -0.15em;
+    top: 0;
     height: 3px;
     background: linear-gradient(90deg, var(--accent), transparent 70%);
     box-shadow: 0 0 12px 2px var(--accent);
