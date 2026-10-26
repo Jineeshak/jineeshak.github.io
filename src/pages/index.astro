@@ -9,21 +9,51 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 const recent = SITE.postsPerHome > 0 ? allPosts.slice(0, SITE.postsPerHome) : allPosts;
+
+const termLines = [
+  { cmd: 'subfinder -d target.com -silent', delay: '0.1s' },
+  { cmd: 'httpx -silent -title -status-code', delay: '0.3s' },
+  { cmd: 'nuclei -l targets.txt -severity high,critical', delay: '0.5s' },
+  { cmd: 'burpsuite --project-file=recon.burp', delay: '0.7s' },
+];
 ---
 <Base>
   <section class="hero">
-    <p class="eyebrow">whoami</p>
-    <h1>{SITE.author}</h1>
-    <p class="tagline">{SITE.tagline}</p>
-    <p class="desc">{SITE.description}</p>
-    <div class="actions">
-      <a class="btn btn--primary" href="/posts/">Read the writeups</a>
-      <a class="btn" href="/about/">About me</a>
-      {SOCIAL.map((s) => (
-        <a class="btn icon-btn" href={s.href} aria-label={s.name}>
-          <Icon name={s.icon as any} size={16} />
-        </a>
-      ))}
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">whoami</p>
+        <h1>
+          <span class="glow-line">
+            <span class="cyber-text">{SITE.author}</span>
+          </span>
+        </h1>
+        <p class="tagline">{SITE.tagline}</p>
+        <p class="desc">{SITE.description}</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="/posts/">Read the writeups</a>
+          <a class="btn" href="/about/">About me</a>
+          {SOCIAL.map((s) => (
+            <a class="btn icon-btn" href={s.href} aria-label={s.name}>
+              <Icon name={s.icon as any} size={16} />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div class="terminal" aria-hidden="true">
+        <div class="terminal-bar">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <div class="terminal-body mono">
+          {termLines.map((l) => (
+            <p class="terminal-line" style={`--delay: ${l.delay}`}>
+              <span class="prompt-sign">$</span> {l.cmd}
+            </p>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
@@ -38,9 +68,94 @@ const recent = SITE.postsPerHome > 0 ? allPosts.slice(0, SITE.postsPerHome) : al
 
 <style>
   .hero { padding-block: 2.5rem 3.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; }
+
   .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.2em; }
-  .tagline { font-family: var(--font-mono); color: var(--accent-2); font-size: 1.05rem; margin: 0 0 0.8em; }
+  .glow-line { position: relative; display: inline-block; }
+  .glow-line::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -0.15em;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent 70%);
+    box-shadow: 0 0 12px 2px var(--accent);
+  }
+  .cyber-text {
+    position: relative;
+    display: inline-block;
+    color: var(--accent);
+    text-shadow: 0 0 18px rgba(255, 95, 86, 0.55), 0 0 40px rgba(255, 95, 86, 0.25);
+  }
+  .cyber-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 95, 86, 0.35), transparent);
+    animation: scan 3s infinite;
+  }
+  .cyber-text::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 95, 86, 0.6);
+    transform-origin: left;
+    animation: scanline 3s infinite;
+  }
+  @keyframes scan {
+    0% { width: 0; left: 0; }
+    50% { width: 100%; }
+    100% { width: 0; left: 100%; }
+  }
+  @keyframes scanline {
+    0% { transform: scaleX(0); }
+    50% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+  }
+
+  .tagline { font-family: var(--font-mono); color: var(--accent-2); font-size: 1.05rem; margin: 0.4em 0 0.8em; }
   .desc { color: var(--muted); max-width: 60ch; margin-bottom: 1.6em; }
   .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }
   .icon-btn { padding: 0.6em 0.8em; }
+
+  .terminal {
+    background: var(--code-bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow), 0 0 40px -10px rgba(255, 95, 86, 0.25);
+    overflow: hidden;
+  }
+  .terminal-bar { display: flex; gap: 0.5rem; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #f7b955; }
+  .dot-green { background: #4caf50; }
+  .terminal-body { padding: 1.2rem 1.1rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .terminal-line {
+    margin: 0;
+    font-size: 0.86rem;
+    color: var(--text);
+    opacity: 0;
+    transform: translateY(0.8rem);
+    animation: slideIn 0.5s ease-out forwards;
+    animation-delay: var(--delay);
+  }
+  .prompt-sign { color: var(--accent-2); }
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 800px) {
+    .hero-grid { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cyber-text::before, .cyber-text::after, .terminal-line { animation: none; opacity: 1; transform: none; }
+  }
 </style>
