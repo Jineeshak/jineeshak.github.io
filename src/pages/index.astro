@@ -14,7 +14,7 @@ const termLines = [
   { cmd: 'subfinder -d target.com -silent', delay: '0.1s' },
   { cmd: 'httpx -silent -title -status-code', delay: '0.3s' },
   { cmd: 'nuclei -l targets.txt -severity high,critical', delay: '0.5s' },
-  { cmd: 'burpsuite --project-file=recon.burp', delay: '0.7s' },
+  { cmd: 'ffuf -u https://target.com/FUZZ -w wordlist.txt -mc 200,301,403', delay: '0.7s' },
 ];
 ---
 <Base>
@@ -22,11 +22,7 @@ const termLines = [
     <div class="hero-grid">
       <div class="hero-copy">
         <p class="eyebrow">whoami</p>
-        <h1>
-          <span class="glow-line">
-            <span class="cyber-text">{SITE.author}</span>
-          </span>
-        </h1>
+        <h1><span class="cyber-text">{SITE.author}</span></h1>
         <p class="tagline">{SITE.tagline}</p>
         <p class="desc">{SITE.description}</p>
         <div class="actions">
@@ -70,18 +66,7 @@ const termLines = [
   .hero { padding-block: 2.5rem 3.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
   .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; }
 
-  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.2em; }
-  .glow-line { position: relative; display: inline-block; }
-  .glow-line::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: -0.15em;
-    height: 3px;
-    background: linear-gradient(90deg, var(--accent), transparent 70%);
-    box-shadow: 0 0 12px 2px var(--accent);
-  }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0.5em 0 0.3em; }
   .cyber-text {
     position: relative;
     display: inline-block;
@@ -120,7 +105,7 @@ const termLines = [
     100% { transform: scaleX(0); }
   }
 
-  .tagline { font-family: var(--font-mono); color: var(--accent-2); font-size: 1.05rem; margin: 0.4em 0 0.8em; }
+  .tagline { font-family: var(--font-mono); color: var(--accent-2); font-size: 1.05rem; margin: 0 0 0.8em; }
   .desc { color: var(--muted); max-width: 60ch; margin-bottom: 1.6em; }
   .actions { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }
   .icon-btn { padding: 0.6em 0.8em; }
