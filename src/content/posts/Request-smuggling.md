@@ -42,8 +42,6 @@ X-Ignore: X
 
 Instead of the expected response of "302," the application returned a "404" status code, indicating that the vulnerability was present.
 
-![Screenshot](https://jaksan.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2F22149b15-d733-4242-b5ad-6d1645d78a09%2FScreenshot_2023-05-16_at_12.07.05_PM(1).jpg?table=block&id=5f03f4bc-0539-4e4c-87aa-5ba0aa8d37d2&spaceId=13ac45fb-0b3e-4834-8b18-ec6f584d18fd&width=2000&userId=&cache=v2)
-
 ### Exploiting the Vulnerability
 
 Further investigation using param-miner extension revealed that the application accepts the **x-forwarded-for** header, which allowed me to manipulate the "Host" value in the response. With this information, I crafted a second request to redirect the base URL of the login form to a controlled domain, as demonstrated by the following payload:
@@ -69,8 +67,6 @@ X-Ignore: X
 ```
 
 This manipulation changed the base URL of the login request form to a malicious domain, allowing an attacker to intercept user credentials.
-
-![Screenshot 2 ](https://jaksan.notion.site/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fe67ab3da-1b94-4a50-a083-2bf026eb2be6%2FScreenshot_2023-05-22_at_9.27.15_PM.png?table=block&id=2c1eb8d5-52a8-4f58-9619-e4114745142c&spaceId=13ac45fb-0b3e-4834-8b18-ec6f584d18fd&width=2000&userId=&cache=v2)
 
 ### Potential Impact
 

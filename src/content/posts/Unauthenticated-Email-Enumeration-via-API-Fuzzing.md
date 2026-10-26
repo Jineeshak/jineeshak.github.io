@@ -145,6 +145,6 @@ result = brute_force_attack()
 print("The correct username is:", result)
 ```
 
-![Sample Proof of Concept (PoC)](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/3.png?raw=true "Username enumeration")
+![Sample Proof of Concept (PoC)](/assets/img/3.png "Username enumeration")
 
 In response to this discovery, the program triaged and fixed the vulnerability by implementing input validation and captcha protection to the registration page.

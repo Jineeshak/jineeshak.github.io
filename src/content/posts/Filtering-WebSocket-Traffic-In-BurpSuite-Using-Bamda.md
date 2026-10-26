@@ -34,7 +34,7 @@ When dealing with WebSocket traffic, you often face:
 - Limited UI-level filtering options
 
 <figure>
-  <img src="https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/Burp_websocket.png?raw=true" alt="Burp Suite WebSocket Filtering Options">
+  <img src="/assets/img/Burp_websocket.png" alt="Burp Suite WebSocket Filtering Options">
   <figcaption>Burp Suite WebSocket filtering options for managing WebSocket traffic</figcaption>
 </figure>
 

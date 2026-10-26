@@ -18,7 +18,7 @@ tags:
 
 I was testing a bug bounty target when I noticed that the extension [JS-Miner](https://portswigger.net/bappstore/0ab7a94d8e11449daaf0fb387431225b) flagged a dependency issue in the target application. The issue involved a JavaScript file that referenced an organization called **private-progrm-widget/widget1**. However, this organization was not found in the NPM registry. An attacker can create a fake package that is named `private-progrm-widget` and then create a module name `widget1` and upload that to the NPM registry. When the target application tries to install this package, it will actually install the attacker's malicious code.
 
-![JS-miner](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/JS4.png?raw=true)
+![JS-miner](/assets/img/JS4.png)
 
 For the proof of concept, I created the following `index.js` and `package.json` files and published them to [npmjs.com](https://npmjs.com/) under the name **private-progrm-widget/widget module** :
 
@@ -99,6 +99,6 @@ req.end();
 
 When a user installs this module, it retrieves their username and current working directory. After waiting for a while, the following HTTP calls were logged to my [interact.sh](https://interact.sh/) server, confirming the execution of the `index.js` file.
 
-![Remote%20Code%20Execution%20using%20Dependency%20Confusion%20bbc9d0cfc912465883f0d0f3d55ffa68/Screenshot_2023-05-23_at_5.20.20_PM.png](https://github.com/Jineeshak/jineeshak.github.io/blob/main/assets/img/JS2.png?raw=true)
+![Remote%20Code%20Execution%20using%20Dependency%20Confusion%20bbc9d0cfc912465883f0d0f3d55ffa68/Screenshot_2023-05-23_at_5.20.20_PM.png](/assets/img/JS2.png)
 
 Reference: [https://dhiyaneshgeek.github.io/web/security/2021/09/04/dependency-confusion/](https://dhiyaneshgeek.github.io/web/security/2021/09/04/dependency-confusion/)
